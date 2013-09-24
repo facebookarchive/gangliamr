@@ -65,3 +65,17 @@ func TestHistogramSimple(t *testing.T) {
 		Slope: "both",
 	})
 }
+
+func TestHistogramMisconfigured(t *testing.T) {
+	t.Parallel()
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatal("was expecting a panic")
+		}
+	}()
+	hg := &gangliamr.Histogram{}
+	registry := gangliamr.Registry{
+		TickInterval: 5 * time.Millisecond,
+	}
+	registry.Register(hg)
+}
