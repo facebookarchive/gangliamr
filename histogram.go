@@ -7,6 +7,7 @@ import (
 	"github.com/daaku/go.metrics"
 )
 
+// Histograms calculate distribution statistics from an int64 value.
 type Histogram struct {
 	// The underlying in-memory metric. This must be specified.
 	metrics.Histogram

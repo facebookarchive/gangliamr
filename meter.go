@@ -5,6 +5,8 @@ import (
 	"github.com/daaku/go.metrics"
 )
 
+// Meters count events to produce exponentially-weighted moving average rates
+// at one-, five-, and fifteen-minutes and a mean rate.
 type Meter struct {
 	// The underlying in-memory metric.
 	metrics.Meter

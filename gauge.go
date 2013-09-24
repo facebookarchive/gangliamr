@@ -5,6 +5,7 @@ import (
 	"github.com/daaku/go.metrics"
 )
 
+// Gauges hold an int64 value that can be set arbitrarily.
 type Gauge struct {
 	// The underlying in-memory metric.
 	metrics.Gauge

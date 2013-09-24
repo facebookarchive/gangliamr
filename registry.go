@@ -9,14 +9,15 @@ import (
 	"github.com/daaku/go.ganglia/gmetric"
 )
 
+// Internally we verify the registered metrics match this interface.
 type metric interface {
 	writeMeta(c *gmetric.Client)
 	writeValue(c *gmetric.Client)
 	register(r *Registry)
 }
 
-// Registry provides a metrics Registry that will report the registered metrics
-// to Ganglia based on the configuration.
+// Registry provides the process to periodically report the in-memory metrics
+// to Ganglia.
 type Registry struct {
 	Prefix        string
 	NameSeparator string // Defaults to a dot "."
@@ -40,7 +41,11 @@ func (r *Registry) start() {
 	}()
 }
 
-// Register a metric.
+// Register a metric. The only metrics acceptable for registration are the ones
+// provided in this package itself. The registration function uses an untyped
+// argument to make it easier for use with fields typed as one of the metrics
+// in the go.metrics library. All the metrics provided by this library embed
+// one of those metrics and augment them with Ganglia specific metadata.
 func (r *Registry) Register(m interface{}) {
 	r.startOnce.Do(r.start)
 	r.mutex.Lock()
