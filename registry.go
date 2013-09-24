@@ -59,9 +59,9 @@ func (r *Registry) Register(m interface{}) {
 }
 
 func (r *Registry) registered() []metric {
-	metrics := make([]metric, len(r.metrics))
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
+	metrics := make([]metric, len(r.metrics))
 	copy(metrics, r.metrics)
 	return metrics
 }
