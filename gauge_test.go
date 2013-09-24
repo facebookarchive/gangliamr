@@ -1,6 +1,7 @@
 package gangliamr_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -10,14 +11,14 @@ import (
 	"github.com/daaku/go.metrics"
 )
 
-func TestCounterSimple(t *testing.T) {
+func TestGaugeSimple(t *testing.T) {
 	t.Parallel()
 	h := gmondtest.NewHarness(t)
 	defer h.Stop()
 
-	const name = "counter_simple_metric"
-	var counter metrics.Counter
-	counter = &gangliamr.Counter{
+	const name = "gauge_simple_metric"
+	var gauge metrics.Gauge
+	gauge = &gangliamr.Gauge{
 		Name: name,
 	}
 
@@ -25,31 +26,31 @@ func TestCounterSimple(t *testing.T) {
 		Client:       h.Client,
 		TickInterval: 5 * time.Millisecond,
 	}
-	registry.Register(counter)
+	registry.Register(gauge)
 
-	counter.Inc(1)
-
-	if counter.Count() != 1 {
-		t.Fatalf("was expecting 1 got %d", counter.Count())
+	const v1 = 42
+	gauge.Update(v1)
+	if gauge.Value() != v1 {
+		t.Fatalf("was expecting %d got %d", v1, gauge.Value())
 	}
 
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name,
-		Value: "1",
-		Unit:  "count",
+		Value: fmt.Sprint(v1),
+		Unit:  "value",
 		Slope: "both",
 	})
 
-	counter.Inc(10)
-
-	if counter.Count() != 11 {
-		t.Fatalf("was expecting 11 got %d", counter.Count())
+	const v2 = 42
+	gauge.Update(v2)
+	if gauge.Value() != v2 {
+		t.Fatalf("was expecting %d got %d", v2, gauge.Value())
 	}
 
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name,
-		Value: "11",
-		Unit:  "count",
+		Value: fmt.Sprint(v2),
+		Unit:  "value",
 		Slope: "both",
 	})
 }
