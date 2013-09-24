@@ -20,7 +20,7 @@ type Histogram struct {
 	Title string
 
 	// The units are shown in the graph to provide context to the numbers.
-	// Default is "count".
+	// Default is "value".
 	Units string
 
 	// Descriptions serve as documentation.
@@ -51,14 +51,18 @@ func (h *Histogram) register(r *Registry) {
 		histimeMetric: h,
 		Name:          h.Name,
 		Title:         h.Title,
-		Units:         h.Units,
+		Units:         nonEmpty(h.Units, "value"),
 		Description:   h.Description,
 		Groups:        h.Groups,
 	}
 	h.histime.register(r)
 	h.count = gmetric.Metric{
-		Name:      r.makeName(h.Name + "count"),
-		ValueType: gmetric.ValueUint32,
-		Slope:     gmetric.SlopeBoth,
+		Name:        r.makeName(h.Name, "count"),
+		Title:       makeOptional(h.Title, "count"),
+		Description: makeOptional(h.Description, "count"),
+		Groups:      h.Groups,
+		Units:       "count",
+		ValueType:   gmetric.ValueUint32,
+		Slope:       gmetric.SlopeBoth,
 	}
 }

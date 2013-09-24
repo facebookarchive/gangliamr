@@ -41,7 +41,7 @@ func TestGaugeSimple(t *testing.T) {
 		Slope: "both",
 	})
 
-	const v2 = 42
+	const v2 = 43
 	gauge.Update(v2)
 	if gauge.Value() != v2 {
 		t.Fatalf("was expecting %d got %d", v2, gauge.Value())
