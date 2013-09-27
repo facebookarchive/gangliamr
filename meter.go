@@ -108,7 +108,7 @@ func (m *meterShared) register(r *Registry) {
 	m.count = gmetric.Metric{
 		Name:        r.makeName(m.Name, "count"),
 		Title:       makeOptional(m.Title, "count"),
-		Units:       m.Units,
+		Units:       nonEmpty(m.Units, "count"),
 		Description: makeOptional(m.Description, "count"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueInt32,
@@ -117,7 +117,7 @@ func (m *meterShared) register(r *Registry) {
 	m.m1rate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "one-minute"),
 		Title:       makeOptional(m.Title, "one minute"),
-		Units:       m.Units,
+		Units:       nonEmpty(m.Units, "count"),
 		Description: makeOptional(m.Description, "one minute"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueFloat64,
@@ -126,7 +126,7 @@ func (m *meterShared) register(r *Registry) {
 	m.m5rate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "five-minute"),
 		Title:       makeOptional(m.Title, "five minute"),
-		Units:       m.Units,
+		Units:       nonEmpty(m.Units, "count"),
 		Description: makeOptional(m.Description, "five minute"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueFloat64,
@@ -135,7 +135,7 @@ func (m *meterShared) register(r *Registry) {
 	m.m15rate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "fifteen-minute"),
 		Title:       makeOptional(m.Title, "fifteen minute"),
-		Units:       m.Units,
+		Units:       nonEmpty(m.Units, "count"),
 		Description: makeOptional(m.Description, "fifteen minute"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueFloat64,
@@ -144,7 +144,7 @@ func (m *meterShared) register(r *Registry) {
 	m.meanRate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "mean"),
 		Title:       makeOptional(m.Title, "mean"),
-		Units:       m.Units,
+		Units:       nonEmpty(m.Units, "count"),
 		Description: makeOptional(m.Description, "mean"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueFloat64,
