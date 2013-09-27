@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/daaku/go.ganglia/gmetric"
+	"github.com/daaku/go.metrics"
 )
 
 // Internally we verify the registered metrics match this interface.
@@ -22,7 +23,7 @@ type Registry struct {
 	Prefix        string
 	NameSeparator string // Defaults to a dot "."
 	Client        *gmetric.Client
-	TickInterval  time.Duration
+	TickDuration  time.Duration
 	startOnce     sync.Once
 	metrics       []metric
 	mutex         sync.Mutex
@@ -30,13 +31,24 @@ type Registry struct {
 
 func (r *Registry) start() {
 	go func() {
+		sendTicker := time.NewTicker(r.TickDuration)
+		metricsTicker := time.NewTicker(metrics.TickDuration)
 		for {
-			metrics := r.registered()
-			for _, m := range metrics {
-				m.writeMeta(r.Client)
-				m.writeValue(r.Client)
+			select {
+			case <-sendTicker.C:
+				ms := r.registered()
+				for _, m := range ms {
+					m.writeMeta(r.Client)
+					m.writeValue(r.Client)
+				}
+			case <-metricsTicker.C:
+				ms := r.registered()
+				for _, m := range ms {
+					if t, ok := m.(metrics.Tickable); ok {
+						t.Tick()
+					}
+				}
 			}
-			time.Sleep(r.TickInterval)
 		}
 	}()
 }

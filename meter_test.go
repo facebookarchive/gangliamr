@@ -24,7 +24,7 @@ func TestMeterSimple(t *testing.T) {
 
 	registry := gangliamr.Registry{
 		Client:       h.Client,
-		TickInterval: 5 * time.Millisecond,
+		TickDuration: 5 * time.Millisecond,
 	}
 	registry.Register(meter)
 

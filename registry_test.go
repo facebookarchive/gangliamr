@@ -26,7 +26,7 @@ func TestRegistryPrefix(t *testing.T) {
 	registry := gangliamr.Registry{
 		Prefix:       prefix,
 		Client:       h.Client,
-		TickInterval: 5 * time.Millisecond,
+		TickDuration: 5 * time.Millisecond,
 	}
 	registry.Register(gauge)
 
@@ -48,7 +48,7 @@ func TestRegistryInvalidRegister(t *testing.T) {
 		}
 	}()
 	registry := gangliamr.Registry{
-		TickInterval: 5 * time.Millisecond,
+		TickDuration: 5 * time.Millisecond,
 	}
 	registry.Register(1)
 }
