@@ -16,8 +16,7 @@ func TestHistogramSimple(t *testing.T) {
 	const name = "histogram_simple_metric"
 	var hg metrics.Histogram
 	hg = &Histogram{
-		Histogram: metrics.NewHistogram(metrics.NewUniformSample(10)),
-		Name:      name,
+		Name: name,
 	}
 
 	registry := testRegistry(h.Client)
