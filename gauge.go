@@ -7,27 +7,13 @@ import (
 
 // Gauges hold an int64 value that can be set arbitrarily.
 type Gauge struct {
-	// The underlying in-memory metric.
 	metrics.Gauge
-
-	// The name is used as the file name, and also the title unless one is
-	// explicitly provided.
-	Name string
-
-	// The title is for human consumption and is shown atop the graph.
-	Title string
-
-	// The units are shown in the graph to provide context to the numbers.
-	// Default is "value".
-	Units string
-
-	// Descriptions serve as documentation.
+	Name        string // Required.
+	Title       string
+	Units       string // Default is "value".
 	Description string
-
-	// The groups ensure your metric is kept alongside sibling metrics.
-	Groups []string
-
-	gmetric gmetric.Metric
+	Groups      []string
+	gmetric     gmetric.Metric
 }
 
 func (g *Gauge) writeMeta(c *gmetric.Client) {

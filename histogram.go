@@ -9,28 +9,14 @@ import (
 
 // Histograms calculate distribution statistics from an int64 value.
 type Histogram struct {
-	// The underlying in-memory metric. This must be specified.
-	metrics.Histogram
-
-	// The name is used as the file name, and also the title unless one is
-	// explicitly provided.
-	Name string
-
-	// The title is for human consumption and is shown atop the graph.
-	Title string
-
-	// The units are shown in the graph to provide context to the numbers.
-	// Default is "value".
-	Units string
-
-	// Descriptions serve as documentation.
-	Description string
-
-	// The groups ensure your metric is kept alongside sibling metrics.
-	Groups []string
-
-	count   gmetric.Metric
-	histime *histime
+	metrics.Histogram        // This must be specified.
+	Name              string // Required.
+	Title             string
+	Units             string // Default is "value".
+	Description       string
+	Groups            []string
+	count             gmetric.Metric
+	histime           *histime
 }
 
 func (h *Histogram) writeValue(c *gmetric.Client) {

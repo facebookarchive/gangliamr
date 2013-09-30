@@ -22,8 +22,8 @@ func TestCounterSimple(t *testing.T) {
 	}
 
 	registry := gangliamr.Registry{
-		Client:       h.Client,
-		TickDuration: 5 * time.Millisecond,
+		Client:            h.Client,
+		WriteTickDuration: 5 * time.Millisecond,
 	}
 	registry.Register(counter)
 

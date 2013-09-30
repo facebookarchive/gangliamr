@@ -7,27 +7,13 @@ import (
 
 // Counters hold an int64 value that can be incremented and decremented.
 type Counter struct {
-	// The underlying in-memory metric.
 	metrics.Counter
-
-	// The name is used as the file name, and also the title unless one is
-	// explicitly provided.
-	Name string
-
-	// The title is for human consumption and is shown atop the graph.
-	Title string
-
-	// The units are shown in the graph to provide context to the numbers.
-	// Default is "count".
-	Units string
-
-	// Descriptions serve as documentation.
+	Name        string // Required.
+	Title       string
+	Units       string // Default is "count".
 	Description string
-
-	// The groups ensure your metric is kept alongside sibling metrics.
-	Groups []string
-
-	gmetric gmetric.Metric
+	Groups      []string
+	gmetric     gmetric.Metric
 }
 
 func (c *Counter) writeMeta(client *gmetric.Client) {

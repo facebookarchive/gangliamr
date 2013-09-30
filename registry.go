@@ -20,18 +20,18 @@ type metric interface {
 // Registry provides the process to periodically report the in-memory metrics
 // to Ganglia.
 type Registry struct {
-	Prefix        string
-	NameSeparator string // Defaults to a dot "."
-	Client        *gmetric.Client
-	TickDuration  time.Duration
-	startOnce     sync.Once
-	metrics       []metric
-	mutex         sync.Mutex
+	Prefix            string
+	NameSeparator     string // Defaults to a dot "."
+	Client            *gmetric.Client
+	WriteTickDuration time.Duration
+	startOnce         sync.Once
+	metrics           []metric
+	mutex             sync.Mutex
 }
 
 func (r *Registry) start() {
 	go func() {
-		sendTicker := time.NewTicker(r.TickDuration)
+		sendTicker := time.NewTicker(r.WriteTickDuration)
 		metricsTicker := time.NewTicker(metrics.TickDuration)
 		for {
 			select {

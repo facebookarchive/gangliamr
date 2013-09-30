@@ -8,27 +8,13 @@ import (
 // Meters count events to produce exponentially-weighted moving average rates
 // at one-, five-, and fifteen-minutes and a mean rate.
 type Meter struct {
-	// The underlying in-memory metric.
 	metrics.Meter
-
-	// The name is used as the file name, and also the title unless one is
-	// explicitly provided.
-	Name string
-
-	// The title is for human consumption and is shown atop the graph.
-	Title string
-
-	// The units are shown in the graph to provide context to the numbers.
-	// Default is "count".
-	Units string
-
-	// Descriptions serve as documentation.
+	Name        string // Required.
+	Title       string
+	Units       string // Default is "count".
 	Description string
-
-	// The groups ensure your metric is kept alongside sibling metrics.
-	Groups []string
-
-	impl *meterShared
+	Groups      []string
+	impl        *meterShared
 }
 
 func (m *Meter) writeMeta(c *gmetric.Client) {
@@ -61,31 +47,17 @@ type meterMetric interface {
 }
 
 type meterShared struct {
-	// The underlying in-memory metric.
 	meterMetric
-
-	// The name is used as the file name, and also the title unless one is
-	// explicitly provided.
-	Name string
-
-	// The title is for human consumption and is shown atop the graph.
-	Title string
-
-	// The units are shown in the graph to provide context to the numbers.
-	// Default is "count".
-	Units string
-
-	// Descriptions serve as documentation.
+	Name        string // Required.
+	Title       string
+	Units       string // Default is "count".
 	Description string
-
-	// The groups ensure your metric is kept alongside sibling metrics.
-	Groups []string
-
-	count    gmetric.Metric
-	m1rate   gmetric.Metric
-	m5rate   gmetric.Metric
-	m15rate  gmetric.Metric
-	meanRate gmetric.Metric
+	Groups      []string
+	count       gmetric.Metric
+	m1rate      gmetric.Metric
+	m5rate      gmetric.Metric
+	m15rate     gmetric.Metric
+	meanRate    gmetric.Metric
 }
 
 func (m *meterShared) writeMeta(c *gmetric.Client) {

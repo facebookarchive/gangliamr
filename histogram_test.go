@@ -23,8 +23,8 @@ func TestHistogramSimple(t *testing.T) {
 	}
 
 	registry := gangliamr.Registry{
-		Client:       h.Client,
-		TickDuration: 5 * time.Millisecond,
+		Client:            h.Client,
+		WriteTickDuration: 5 * time.Millisecond,
 	}
 	registry.Register(hg)
 
@@ -75,7 +75,7 @@ func TestHistogramMisconfigured(t *testing.T) {
 	}()
 	hg := &gangliamr.Histogram{}
 	registry := gangliamr.Registry{
-		TickDuration: 5 * time.Millisecond,
+		WriteTickDuration: 5 * time.Millisecond,
 	}
 	registry.Register(hg)
 }

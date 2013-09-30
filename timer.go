@@ -13,21 +13,12 @@ type Timer struct {
 	// UNIX load averages.
 	metrics.Timer
 
-	// The name is used as the file name, and also the title unless one is
-	// explicitly provided.
-	Name string
-
-	// The title is for human consumption and is shown atop the graph.
-	Title string
-
-	// Descriptions serve as documentation.
+	Name        string // Required
+	Title       string
 	Description string
-
-	// The groups ensure your metric is kept alongside sibling metrics.
-	Groups []string
-
-	histime *histime
-	calls   *meterShared
+	Groups      []string
+	histime     *histime
+	calls       *meterShared
 }
 
 func (t *Timer) writeValue(c *gmetric.Client) {
