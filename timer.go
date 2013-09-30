@@ -59,7 +59,7 @@ func (t *Timer) register(r *Registry) {
 	}
 	t.calls = &meterShared{
 		meterMetric: t,
-		Name:        t.Name + r.NameSeparator + "calls",
+		Name:        t.Name + r.nameSeparator() + "calls",
 		Title:       makeOptional(t.Title, "calls"),
 		Units:       "nanoseconds",
 		Description: makeOptional(t.Description, "calls"),

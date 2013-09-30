@@ -80,10 +80,6 @@ func (r *Registry) registered() []metric {
 
 func (r *Registry) makeName(parts ...string) string {
 	var nonempty []string
-	sep := r.NameSeparator
-	if sep == "" {
-		sep = "."
-	}
 	if r.Prefix != "" {
 		nonempty = append(nonempty, r.Prefix)
 	}
@@ -92,5 +88,12 @@ func (r *Registry) makeName(parts ...string) string {
 			nonempty = append(nonempty, p)
 		}
 	}
-	return strings.Join(nonempty, sep)
+	return strings.Join(nonempty, r.nameSeparator())
+}
+
+func (r *Registry) nameSeparator() string {
+	if r.NameSeparator == "" {
+		return "."
+	}
+	return r.NameSeparator
 }

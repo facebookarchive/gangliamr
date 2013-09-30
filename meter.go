@@ -108,7 +108,7 @@ func (m *meterShared) register(r *Registry) {
 	m.count = gmetric.Metric{
 		Name:        r.makeName(m.Name, "count"),
 		Title:       makeOptional(m.Title, "count"),
-		Units:       nonEmpty(m.Units, "count"),
+		Units:       "count",
 		Description: makeOptional(m.Description, "count"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueInt32,
