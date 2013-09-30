@@ -8,7 +8,7 @@
 // http://godoc.org/github.com/daaku/go.ganglia/gmetric.
 //
 // A handful of metrics types are provided, and they all have a similar form.
-// The "name" property is always required, all other metadata properties are
+// The "Name" property is always required, all other metadata properties are
 // optional. The metric instances are also automatically created upon
 // registration.
 //
