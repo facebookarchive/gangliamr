@@ -32,7 +32,6 @@ func (t *Timer) writeMeta(c *gmetric.Client) {
 }
 
 func (t *Timer) register(r *Registry) {
-	// TODO: units
 	if t.Timer == nil {
 		t.Timer = metrics.NewTimer()
 	}

@@ -26,7 +26,9 @@ func (m *Meter) writeValue(c *gmetric.Client) {
 }
 
 func (m *Meter) register(r *Registry) {
-	m.Meter = metrics.NewMeter()
+	if m.Meter == nil {
+		m.Meter = metrics.NewMeter()
+	}
 	m.impl = &meterShared{
 		meterMetric: m,
 		Name:        m.Name,

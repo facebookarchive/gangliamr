@@ -10,8 +10,7 @@
 // A handful of metrics types are provided, and they all have a similar form.
 // The "name" property is always required, all other metadata properties are
 // optional. The metric instances are also automatically created upon
-// registration. The only exception is that the Histogram metric must be
-// explicitly provided as it required user configuration.
+// registration.
 //
 // The common set of properties for the metrics are:
 //

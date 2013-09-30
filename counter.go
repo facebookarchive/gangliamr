@@ -25,7 +25,9 @@ func (c *Counter) writeValue(client *gmetric.Client) {
 }
 
 func (c *Counter) register(r *Registry) {
-	c.Counter = metrics.NewCounter()
+	if c.Counter == nil {
+		c.Counter = metrics.NewCounter()
+	}
 	c.gmetric = gmetric.Metric{
 		Name:        r.makeName(c.Name),
 		Title:       c.Title,

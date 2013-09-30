@@ -1,22 +1,24 @@
 package gangliamr
 
 import (
-	"fmt"
-
 	"github.com/daaku/go.ganglia/gmetric"
 	"github.com/daaku/go.metrics"
 )
 
 // Histograms calculate distribution statistics from an int64 value.
 type Histogram struct {
-	metrics.Histogram        // This must be specified.
-	Name              string // Required.
-	Title             string
-	Units             string // Default is "value".
-	Description       string
-	Groups            []string
-	count             gmetric.Metric
-	histime           *histime
+	// The underlying in-memory metric. Unless explicitly specified, this will be
+	// histogram with an exponentially-decaying sample with the same reservoir
+	// size and alpha as UNIX load averages.
+	metrics.Histogram
+
+	Name        string // Required.
+	Title       string
+	Units       string // Default is "value".
+	Description string
+	Groups      []string
+	count       gmetric.Metric
+	histime     *histime
 }
 
 func (h *Histogram) writeValue(c *gmetric.Client) {
@@ -31,7 +33,7 @@ func (h *Histogram) writeMeta(c *gmetric.Client) {
 
 func (h *Histogram) register(r *Registry) {
 	if h.Histogram == nil {
-		panic(fmt.Sprintf("histogram misconfigured: %+v", h))
+		h.Histogram = metrics.NewHistogram(metrics.NewExpDecaySample(1028, 0.015))
 	}
 	h.histime = &histime{
 		histimeMetric: h,

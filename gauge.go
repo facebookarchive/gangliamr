@@ -25,7 +25,9 @@ func (g *Gauge) writeValue(c *gmetric.Client) {
 }
 
 func (g *Gauge) register(r *Registry) {
-	g.Gauge = metrics.NewGauge()
+	if g.Gauge == nil {
+		g.Gauge = metrics.NewGauge()
+	}
 	g.gmetric = gmetric.Metric{
 		Name:        r.makeName(g.Name),
 		Title:       g.Title,
