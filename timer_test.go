@@ -1,4 +1,4 @@
-package gangliamr_test
+package gangliamr
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 
 	"github.com/daaku/go.ganglia/gmon"
 	"github.com/daaku/go.ganglia/gmondtest"
-	"github.com/daaku/go.gangliamr"
 	"github.com/daaku/go.metrics"
 )
 
@@ -18,23 +17,21 @@ func TestTimerSimple(t *testing.T) {
 
 	const name = "timer_simple_metric"
 	var timer metrics.Timer
-	timer = &gangliamr.Timer{
+	timer = &Timer{
 		Name: name,
 	}
 
-	registry := gangliamr.Registry{
-		Client:            h.Client,
-		WriteTickDuration: 5 * time.Millisecond,
-	}
+	registry := testRegistry(h.Client)
 	registry.Register(timer)
 
-	const v1 = 43
+	const v1 = time.Second
 	timer.Update(v1)
-	timer.Tick()
+	registry.tick()
 	if timer.Count() != 1 {
 		t.Fatalf("was expecting %d got %d", 1, timer.Count())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".calls.count",
 		Value: "1",
@@ -44,18 +41,19 @@ func TestTimerSimple(t *testing.T) {
 
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".calls.one-minute",
-		Value: "0.18400888292586468",
+		Value: "0.2",
 		Unit:  "nanoseconds",
 		Slope: "both",
 	})
 
-	const v2 = 42
+	const v2 = 2 * time.Second
 	timer.Update(v2)
-	timer.Tick()
+	registry.tick()
 	if timer.Count() != 2 {
 		t.Fatalf("was expecting %d got %d", 2, timer.Count())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".calls.count",
 		Value: fmt.Sprint(timer.Count()),
@@ -65,7 +63,7 @@ func TestTimerSimple(t *testing.T) {
 
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".calls.one-minute",
-		Value: "0.17047269456202283",
+		Value: "0.2",
 		Unit:  "nanoseconds",
 		Slope: "both",
 	})

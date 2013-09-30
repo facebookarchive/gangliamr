@@ -36,21 +36,29 @@ func (r *Registry) start() {
 		for {
 			select {
 			case <-sendTicker.C:
-				ms := r.registered()
-				for _, m := range ms {
-					m.writeMeta(r.Client)
-					m.writeValue(r.Client)
-				}
+				r.write()
 			case <-metricsTicker.C:
-				ms := r.registered()
-				for _, m := range ms {
-					if t, ok := m.(metrics.Tickable); ok {
-						t.Tick()
-					}
-				}
+				r.tick()
 			}
 		}
 	}()
+}
+
+func (r *Registry) write() {
+	ms := r.registered()
+	for _, m := range ms {
+		m.writeMeta(r.Client)
+		m.writeValue(r.Client)
+	}
+}
+
+func (r *Registry) tick() {
+	ms := r.registered()
+	for _, m := range ms {
+		if t, ok := m.(metrics.Tickable); ok {
+			t.Tick()
+		}
+	}
 }
 
 // Register a metric. The only metrics acceptable for registration are the ones

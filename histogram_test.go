@@ -1,12 +1,10 @@
-package gangliamr_test
+package gangliamr
 
 import (
 	"testing"
-	"time"
 
 	"github.com/daaku/go.ganglia/gmon"
 	"github.com/daaku/go.ganglia/gmondtest"
-	"github.com/daaku/go.gangliamr"
 	"github.com/daaku/go.metrics"
 )
 
@@ -17,15 +15,12 @@ func TestHistogramSimple(t *testing.T) {
 
 	const name = "histogram_simple_metric"
 	var hg metrics.Histogram
-	hg = &gangliamr.Histogram{
+	hg = &Histogram{
 		Histogram: metrics.NewHistogram(metrics.NewUniformSample(10)),
 		Name:      name,
 	}
 
-	registry := gangliamr.Registry{
-		Client:            h.Client,
-		WriteTickDuration: 5 * time.Millisecond,
-	}
+	registry := testRegistry(h.Client)
 	registry.Register(hg)
 
 	const v1 = 43
@@ -34,6 +29,7 @@ func TestHistogramSimple(t *testing.T) {
 		t.Fatalf("was expecting 1 got %d", hg.Count())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".count",
 		Value: "1",
@@ -47,6 +43,7 @@ func TestHistogramSimple(t *testing.T) {
 		t.Fatalf("was expecting 2 got %d", hg.Count())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".count",
 		Value: "2",

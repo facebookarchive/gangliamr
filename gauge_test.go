@@ -1,13 +1,11 @@
-package gangliamr_test
+package gangliamr
 
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/daaku/go.ganglia/gmon"
 	"github.com/daaku/go.ganglia/gmondtest"
-	"github.com/daaku/go.gangliamr"
 	"github.com/daaku/go.metrics"
 )
 
@@ -18,14 +16,11 @@ func TestGaugeSimple(t *testing.T) {
 
 	const name = "gauge_simple_metric"
 	var gauge metrics.Gauge
-	gauge = &gangliamr.Gauge{
+	gauge = &Gauge{
 		Name: name,
 	}
 
-	registry := gangliamr.Registry{
-		Client:            h.Client,
-		WriteTickDuration: 5 * time.Millisecond,
-	}
+	registry := testRegistry(h.Client)
 	registry.Register(gauge)
 
 	const v1 = 42
@@ -34,6 +29,7 @@ func TestGaugeSimple(t *testing.T) {
 		t.Fatalf("was expecting %d got %d", v1, gauge.Value())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name,
 		Value: fmt.Sprint(v1),
@@ -47,6 +43,7 @@ func TestGaugeSimple(t *testing.T) {
 		t.Fatalf("was expecting %d got %d", v2, gauge.Value())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name,
 		Value: fmt.Sprint(v2),

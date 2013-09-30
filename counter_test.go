@@ -1,12 +1,10 @@
-package gangliamr_test
+package gangliamr
 
 import (
 	"testing"
-	"time"
 
 	"github.com/daaku/go.ganglia/gmon"
 	"github.com/daaku/go.ganglia/gmondtest"
-	"github.com/daaku/go.gangliamr"
 	"github.com/daaku/go.metrics"
 )
 
@@ -17,22 +15,19 @@ func TestCounterSimple(t *testing.T) {
 
 	const name = "counter_simple_metric"
 	var counter metrics.Counter
-	counter = &gangliamr.Counter{
+	counter = &Counter{
 		Name: name,
 	}
 
-	registry := gangliamr.Registry{
-		Client:            h.Client,
-		WriteTickDuration: 5 * time.Millisecond,
-	}
+	registry := testRegistry(h.Client)
 	registry.Register(counter)
 
 	counter.Inc(1)
-
 	if counter.Count() != 1 {
 		t.Fatalf("was expecting 1 got %d", counter.Count())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name,
 		Value: "1",
@@ -46,6 +41,7 @@ func TestCounterSimple(t *testing.T) {
 		t.Fatalf("was expecting 11 got %d", counter.Count())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name,
 		Value: "11",

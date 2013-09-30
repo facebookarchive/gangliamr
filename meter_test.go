@@ -1,13 +1,11 @@
-package gangliamr_test
+package gangliamr
 
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/daaku/go.ganglia/gmon"
 	"github.com/daaku/go.ganglia/gmondtest"
-	"github.com/daaku/go.gangliamr"
 	"github.com/daaku/go.metrics"
 )
 
@@ -18,23 +16,21 @@ func TestMeterSimple(t *testing.T) {
 
 	const name = "meter_simple_metric"
 	var meter metrics.Meter
-	meter = &gangliamr.Meter{
+	meter = &Meter{
 		Name: name,
 	}
 
-	registry := gangliamr.Registry{
-		Client:            h.Client,
-		WriteTickDuration: 5 * time.Millisecond,
-	}
+	registry := testRegistry(h.Client)
 	registry.Register(meter)
 
 	const v1 = 43
 	meter.Mark(v1)
-	meter.Tick()
+	registry.tick()
 	if meter.Count() != v1 {
 		t.Fatalf("was expecting %d got %d", v1, meter.Count())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".count",
 		Value: fmt.Sprint(meter.Count()),
@@ -51,11 +47,12 @@ func TestMeterSimple(t *testing.T) {
 
 	const v2 = 42
 	meter.Mark(v2)
-	meter.Tick()
+	registry.tick()
 	if meter.Count() != v1+v2 {
 		t.Fatalf("was expecting %d got %d", v1+v2, meter.Count())
 	}
 
+	registry.write()
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".count",
 		Value: fmt.Sprint(meter.Count()),
