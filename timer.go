@@ -7,10 +7,9 @@ import (
 
 // Timers capture the duration and rate of events.
 type Timer struct {
-	// The underlying in-memory metric. Unless explicitly specified, this will be
-	// a timer with a standard histogram and meter. The histogram will use an
-	// exponentially-decaying sample with the same reservoir size and alpha as
-	// UNIX load averages.
+	// Unless explicitly specified, this will be a timer with a standard
+	// histogram and meter. The histogram will use an exponentially-decaying
+	// sample with the same reservoir size and alpha as UNIX load averages.
 	metrics.Timer
 
 	Name        string // Required

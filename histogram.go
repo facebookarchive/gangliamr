@@ -7,9 +7,9 @@ import (
 
 // Histograms calculate distribution statistics from an int64 value.
 type Histogram struct {
-	// The underlying in-memory metric. Unless explicitly specified, this will be
-	// histogram with an exponentially-decaying sample with the same reservoir
-	// size and alpha as UNIX load averages.
+	// Unless explicitly specified, this will be a histogram with an
+	// exponentially-decaying sample with the same reservoir size and alpha as
+	// UNIX load averages.
 	metrics.Histogram
 
 	Name        string // Required.
