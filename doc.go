@@ -1,16 +1,17 @@
 // Package gangliamr provides metrics backed by Ganglia.
 //
 // The underlying in-memory metrics are used from:
-// http://godoc.org/github.com/daaku/go.metrics. Application code should use
-// the interfaces defined in that package in order to not be Ganglia specific.
+// http://godoc.org/github.com/daaku/go.metrics. Application code should by
+// typed to the interfaces defined in that package in order to not be Ganglia
+// specific.
 //
 // The underlying Ganglia library is:
 // http://godoc.org/github.com/daaku/go.ganglia/gmetric.
 //
 // A handful of metrics types are provided, and they all have a similar form.
-// The "Name" property is always required, all other metadata properties are
-// optional. The metric instances are also automatically created upon
-// registration.
+// The "Name" property is always required, all other properties are optional.
+// The metric instances are initialized upon registration and thus the metrics
+// must be registered before use.
 //
 // The common set of properties for the metrics are:
 //

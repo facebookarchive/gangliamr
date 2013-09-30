@@ -21,7 +21,7 @@ type metric interface {
 // to Ganglia.
 type Registry struct {
 	Prefix            string
-	NameSeparator     string // Defaults to a dot "."
+	NameSeparator     string // Default is a dot "."
 	Client            *gmetric.Client
 	WriteTickDuration time.Duration
 	startOnce         sync.Once
