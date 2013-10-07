@@ -81,7 +81,7 @@ func (m *meterBase) writeValue(c *gmetric.Client) {
 func (m *meterBase) register(r *Registry) {
 	m.count = gmetric.Metric{
 		Name:        r.makeName(m.Name, "count"),
-		Title:       makeOptional(m.Title, "count"),
+		Title:       m.Title,
 		Units:       "count",
 		Description: makeOptional(m.Description, "count"),
 		Groups:      m.Groups,
