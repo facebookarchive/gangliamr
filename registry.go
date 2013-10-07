@@ -10,7 +10,13 @@ import (
 	"github.com/daaku/go.metrics"
 )
 
-// Internally we verify the registered metrics match this interface.
+// Internally we verify the registered metrics match this interface. The basic
+// design of the metric in this library is to map a single metric from
+// go.metrics to one or more gmetric.Metrics. Each of those metrics must be
+// registered with the Registry defined below and will be periodically sent to
+// the ganglia backend. Each metric defines a writeMeta and a writeValue method
+// as defined below and is responsible for writing it's data to the given
+// gmetric.Client.
 type metric interface {
 	writeMeta(c *gmetric.Client)
 	writeValue(c *gmetric.Client)
