@@ -52,9 +52,10 @@ func main() {
 			Groups: []string{"gmrtest"},
 		},
 		ResponseTime: &gangliamr.Timer{
-			Name:   "num_requests",
-			Title:  "Response time",
-			Groups: []string{"gmrtest"},
+			Name:       "num_requests",
+			Resolution: time.Millisecond,
+			Title:      "Response time",
+			Groups:     []string{"gmrtest"},
 		},
 		PageSize: &gangliamr.Histogram{
 			Name:   "page_size",
