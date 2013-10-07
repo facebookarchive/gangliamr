@@ -17,17 +17,14 @@ type Timer struct {
 	Description string
 	Groups      []string
 	histime     *histime
-	calls       *meterBase
 }
 
 func (t *Timer) writeValue(c *gmetric.Client) {
 	t.histime.writeValue(c)
-	t.calls.writeValue(c)
 }
 
 func (t *Timer) writeMeta(c *gmetric.Client) {
 	t.histime.writeMeta(c)
-	t.calls.writeMeta(c)
 }
 
 func (t *Timer) register(r *Registry) {
@@ -43,13 +40,4 @@ func (t *Timer) register(r *Registry) {
 		Groups:        t.Groups,
 	}
 	t.histime.register(r)
-	t.calls = &meterBase{
-		meterMetric: t,
-		Name:        t.Name + r.nameSeparator() + "calls",
-		Title:       makeOptional(t.Title, "calls"),
-		Units:       "nanoseconds",
-		Description: makeOptional(t.Description, "calls"),
-		Groups:      t.Groups,
-	}
-	t.calls.register(r)
 }
