@@ -24,31 +24,20 @@ func TestHistogramSimple(t *testing.T) {
 
 	const v1 = 43
 	hg.Update(v1)
-	if hg.Count() != 1 {
-		t.Fatalf("was expecting 1 got %d", hg.Count())
-	}
 
 	registry.write()
+
 	h.ContainsMetric(&gmon.Metric{
-		Name:  name + ".count",
-		Value: "1",
-		Unit:  "count",
+		Name:  name + ".mean",
+		Value: "43",
+		Unit:  "value",
 		Slope: "both",
 	})
 
 	const v2 = 42
 	hg.Update(v2)
-	if hg.Count() != 2 {
-		t.Fatalf("was expecting 2 got %d", hg.Count())
-	}
 
 	registry.write()
-	h.ContainsMetric(&gmon.Metric{
-		Name:  name + ".count",
-		Value: "2",
-		Unit:  "count",
-		Slope: "both",
-	})
 
 	if hg.Max() != v1 {
 		t.Fatalf("was expecting %d but got %d", v1, hg.Max())
