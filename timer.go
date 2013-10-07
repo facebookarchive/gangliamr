@@ -45,9 +45,6 @@ func (t *Timer) register(r *Registry) {
 	t.histime.register(r)
 	t.calls = &meterBase{
 		meterMetric: t,
-	}
-	t.calls = &meterBase{
-		meterMetric: t,
 		Name:        t.Name + r.nameSeparator() + "calls",
 		Title:       makeOptional(t.Title, "calls"),
 		Units:       "nanoseconds",
