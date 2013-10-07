@@ -14,22 +14,22 @@ type Meter struct {
 	Units       string // Default is "count".
 	Description string
 	Groups      []string
-	impl        *meterShared
+	base        *meterBase
 }
 
 func (m *Meter) writeMeta(c *gmetric.Client) {
-	m.impl.writeMeta(c)
+	m.base.writeMeta(c)
 }
 
 func (m *Meter) writeValue(c *gmetric.Client) {
-	m.impl.writeValue(c)
+	m.base.writeValue(c)
 }
 
 func (m *Meter) register(r *Registry) {
 	if m.Meter == nil {
 		m.Meter = metrics.NewMeter()
 	}
-	m.impl = &meterShared{
+	m.base = &meterBase{
 		meterMetric: m,
 		Name:        m.Name,
 		Title:       m.Title,
@@ -37,7 +37,7 @@ func (m *Meter) register(r *Registry) {
 		Description: m.Description,
 		Groups:      m.Groups,
 	}
-	m.impl.register(r)
+	m.base.register(r)
 }
 
 type meterMetric interface {
@@ -48,7 +48,7 @@ type meterMetric interface {
 	RateMean() float64
 }
 
-type meterShared struct {
+type meterBase struct {
 	meterMetric
 	Name        string // Required.
 	Title       string
@@ -62,7 +62,7 @@ type meterShared struct {
 	meanRate    gmetric.Metric
 }
 
-func (m *meterShared) writeMeta(c *gmetric.Client) {
+func (m *meterBase) writeMeta(c *gmetric.Client) {
 	c.WriteMeta(&m.count)
 	c.WriteMeta(&m.m1rate)
 	c.WriteMeta(&m.m5rate)
@@ -70,7 +70,7 @@ func (m *meterShared) writeMeta(c *gmetric.Client) {
 	c.WriteMeta(&m.meanRate)
 }
 
-func (m *meterShared) writeValue(c *gmetric.Client) {
+func (m *meterBase) writeValue(c *gmetric.Client) {
 	c.WriteValue(&m.count, m.Count())
 	c.WriteValue(&m.m1rate, m.Rate1())
 	c.WriteValue(&m.m5rate, m.Rate5())
@@ -78,7 +78,7 @@ func (m *meterShared) writeValue(c *gmetric.Client) {
 	c.WriteValue(&m.meanRate, m.RateMean())
 }
 
-func (m *meterShared) register(r *Registry) {
+func (m *meterBase) register(r *Registry) {
 	m.count = gmetric.Metric{
 		Name:        r.makeName(m.Name, "count"),
 		Title:       makeOptional(m.Title, "count"),

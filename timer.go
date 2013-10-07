@@ -17,7 +17,7 @@ type Timer struct {
 	Description string
 	Groups      []string
 	histime     *histime
-	calls       *meterShared
+	calls       *meterBase
 }
 
 func (t *Timer) writeValue(c *gmetric.Client) {
@@ -43,10 +43,10 @@ func (t *Timer) register(r *Registry) {
 		Groups:        t.Groups,
 	}
 	t.histime.register(r)
-	t.calls = &meterShared{
+	t.calls = &meterBase{
 		meterMetric: t,
 	}
-	t.calls = &meterShared{
+	t.calls = &meterBase{
 		meterMetric: t,
 		Name:        t.Name + r.nameSeparator() + "calls",
 		Title:       makeOptional(t.Title, "calls"),
