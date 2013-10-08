@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
-	"net"
 	"net/http"
 	"os"
 	"runtime"
@@ -65,12 +64,7 @@ func main() {
 		},
 	}
 
-	client := &gmetric.Client{
-		Addr: []net.Addr{
-			&net.UDPAddr{IP: net.ParseIP("127.0.0.1"), Port: 8649},
-		},
-	}
-
+	client := gmetric.ClientFlag("ganglia")
 	registry := &gangliamr.Registry{
 		Prefix:            "gmrtest",
 		WriteTickDuration: 20 * time.Second,
@@ -79,7 +73,6 @@ func main() {
 
 	addr := flag.String("addr", "0.0.0.0:8077", "server address")
 	gomaxprocs := flag.Int("gomaxprocs", runtime.NumCPU(), "gomaxprocs")
-	flag.StringVar(&client.Host, "host", "localhost", "ganglia host")
 	flag.DurationVar(&server.MaxSleep, "max-sleep", time.Second*5, "max sleep")
 	flag.IntVar(&server.MaxSentences, "max-sentences", 500, "max sentences")
 
