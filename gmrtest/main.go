@@ -27,8 +27,7 @@ type Server struct {
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer s.ResponseTime.Start().Stop()
-	defer s.ConcurrentRequests.Dec(1)
-	s.ConcurrentRequests.Inc(1)
+	defer s.ConcurrentRequests.Inc(1).Dec(1)
 	s.NumRequests.Mark(1)
 	time.Sleep(time.Duration(rand.Int63n(int64(s.MaxSleep))))
 	bd := lorem.Sentences(rand.Intn(s.MaxSentences))
