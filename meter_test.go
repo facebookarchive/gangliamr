@@ -1,7 +1,6 @@
 package gangliamr
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/daaku/go.ganglia/gmon"
@@ -26,18 +25,7 @@ func TestMeterSimple(t *testing.T) {
 	const v1 = 43
 	meter.Mark(v1)
 	registry.tick()
-	if meter.Count() != v1 {
-		t.Fatalf("was expecting %d got %d", v1, meter.Count())
-	}
-
 	registry.write()
-	h.ContainsMetric(&gmon.Metric{
-		Name:  name + ".count",
-		Value: fmt.Sprint(meter.Count()),
-		Unit:  "count",
-		Slope: "both",
-	})
-
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".one-minute",
 		Value: "8.6",
@@ -48,18 +36,7 @@ func TestMeterSimple(t *testing.T) {
 	const v2 = 42
 	meter.Mark(v2)
 	registry.tick()
-	if meter.Count() != v1+v2 {
-		t.Fatalf("was expecting %d got %d", v1+v2, meter.Count())
-	}
-
 	registry.write()
-	h.ContainsMetric(&gmon.Metric{
-		Name:  name + ".count",
-		Value: fmt.Sprint(meter.Count()),
-		Unit:  "count",
-		Slope: "both",
-	})
-
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".one-minute",
 		Value: "8.584008882925865",

@@ -41,15 +41,6 @@ func (m *Meter) register(r *Registry) {
 	if m.Meter == nil {
 		m.Meter = metrics.NewMeter()
 	}
-	m.count = gmetric.Metric{
-		Name:        r.makeName(m.Name, "count"),
-		Title:       m.Title,
-		Units:       "count",
-		Description: makeOptional(m.Description, "count"),
-		Groups:      m.Groups,
-		ValueType:   gmetric.ValueInt32,
-		Slope:       gmetric.SlopeBoth,
-	}
 	m.m1rate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "one-minute"),
 		Title:       makeOptional(m.Title, "one minute"),
