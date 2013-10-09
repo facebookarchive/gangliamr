@@ -36,30 +36,31 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	gmrgroups := []string{"gmrtest"}
 	server := &Server{
 		ConcurrentRequests: &gangliamr.Counter{
 			Name:   "concurrent_requests",
 			Title:  "Number of concurrent requests",
 			Units:  "requests",
-			Groups: []string{"gmrtest"},
+			Groups: gmrgroups,
 		},
 		NumRequests: &gangliamr.Meter{
 			Name:   "num_requests",
 			Title:  "Number of requests",
 			Units:  "requests",
-			Groups: []string{"gmrtest"},
+			Groups: gmrgroups,
 		},
 		ResponseTime: &gangliamr.Timer{
 			Name:       "num_requests",
 			Resolution: time.Millisecond,
 			Title:      "Response time",
-			Groups:     []string{"gmrtest"},
+			Groups:     gmrgroups,
 		},
 		PageSize: &gangliamr.Histogram{
 			Name:   "page_size",
 			Title:  "Page size",
 			Units:  "bytes",
-			Groups: []string{"gmrtest"},
+			Groups: gmrgroups,
 		},
 	}
 
