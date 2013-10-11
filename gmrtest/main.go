@@ -64,7 +64,7 @@ func main() {
 		},
 	}
 
-	client := gmetric.ClientFlag("ganglia")
+	client := gmetric.ClientFromFlag("ganglia")
 	registry := &gangliamr.Registry{
 		Prefix:            "gmrtest",
 		WriteTickDuration: 20 * time.Second,
