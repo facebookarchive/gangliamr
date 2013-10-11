@@ -16,8 +16,8 @@ type Timer struct {
 	// sample with the same reservoir size and alpha as UNIX load averages.
 	metrics.Timer
 
-	// Defaults to time.Nanosecond, supports time.Microsecond, time.Millisecond
-	// or time.Second. Other values will trigger falling back to time.Nanosecond.
+	// Defaults to time.Second, supports time.Microsecond, time.Millisecond
+	// or time.Second. Other values will trigger falling back to time.Second.
 	Resolution time.Duration
 
 	Name        string // Required
@@ -162,38 +162,38 @@ func (t *Timer) register(r *Registry) {
 func (t *Timer) normalizeInt64(v int64) int64 {
 	switch t.Resolution {
 	default:
-		return v
+		return v / int64(time.Second)
 	case time.Microsecond:
 		return v / int64(time.Microsecond)
 	case time.Millisecond:
 		return v / int64(time.Millisecond)
-	case time.Second:
-		return v / int64(time.Second)
+	case time.Nanosecond:
+		return v
 	}
 }
 
 func (t *Timer) normalizeFloat64(v float64) float64 {
 	switch t.Resolution {
 	default:
-		return v
+		return v / float64(time.Second)
 	case time.Microsecond:
 		return v / float64(time.Microsecond)
 	case time.Millisecond:
 		return v / float64(time.Millisecond)
-	case time.Second:
-		return v / float64(time.Second)
+	case time.Nanosecond:
+		return v
 	}
 }
 
 func (t *Timer) units() string {
 	switch t.Resolution {
 	default:
-		return "nanoseconds"
+		return "seconds"
 	case time.Microsecond:
 		return "microseconds"
 	case time.Millisecond:
 		return "milliseconds"
-	case time.Second:
-		return "seconds"
+	case time.Nanosecond:
+		return "nanoseconds"
 	}
 }
