@@ -29,7 +29,7 @@ func TestMeterSimple(t *testing.T) {
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".one-minute",
 		Value: "8.6",
-		Unit:  "count",
+		Unit:  "count/sec",
 		Slope: "both",
 	})
 
@@ -40,7 +40,7 @@ func TestMeterSimple(t *testing.T) {
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".one-minute",
 		Value: "8.584008882925865",
-		Unit:  "count",
+		Unit:  "count/sec",
 		Slope: "both",
 	})
 }
