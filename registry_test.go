@@ -7,9 +7,8 @@ import (
 
 	"github.com/facebookgo/ganglia/gmon"
 	"github.com/facebookgo/ganglia/gmondtest"
+	"github.com/facebookgo/gangliamr"
 	"github.com/facebookgo/metrics"
-
-	"parse.com/gangliamr"
 )
 
 func TestRegistryPrefix(t *testing.T) {
