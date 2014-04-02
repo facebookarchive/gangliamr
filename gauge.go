@@ -1,8 +1,8 @@
 package gangliamr
 
 import (
-	"github.com/daaku/go.ganglia/gmetric"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmetric"
+	"github.com/facebookgo/metrics"
 )
 
 // Gauges hold an int64 value that can be set arbitrarily.
@@ -14,6 +14,10 @@ type Gauge struct {
 	Description string
 	Groups      []string
 	gmetric     gmetric.Metric
+}
+
+func (g *Gauge) name() string {
+	return g.Name
 }
 
 func (g *Gauge) writeMeta(c *gmetric.Client) {

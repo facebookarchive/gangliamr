@@ -5,10 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/daaku/go.ganglia/gmon"
-	"github.com/daaku/go.ganglia/gmondtest"
-	"github.com/daaku/go.gangliamr"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmon"
+	"github.com/facebookgo/ganglia/gmondtest"
+	"github.com/facebookgo/metrics"
+
+	"parse.com/gangliamr"
 )
 
 func TestRegistryPrefix(t *testing.T) {
@@ -51,4 +52,20 @@ func TestRegistryInvalidRegister(t *testing.T) {
 		WriteTickDuration: 5 * time.Millisecond,
 	}
 	registry.Register(1)
+}
+
+func TestTestRegistryAndGet(t *testing.T) {
+	t.Parallel()
+	const name = "gauge_simple_metric"
+	var gauge metrics.Gauge
+	gauge = &gangliamr.Gauge{
+		Name: name,
+	}
+
+	registry := gangliamr.NewTestRegistry()
+	registry.Register(gauge)
+
+	if actual := registry.Get(name); actual != gauge {
+		t.Fatal("did not find expected metric")
+	}
 }

@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/daaku/go.ganglia/gmetric"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmetric"
+	"github.com/facebookgo/metrics"
 )
 
 // Internally we verify the registered metrics match this interface. The basic
@@ -18,6 +18,7 @@ import (
 // as defined below and is responsible for writing it's data to the given
 // gmetric.Client.
 type metric interface {
+	name() string
 	writeMeta(c *gmetric.Client)
 	writeValue(c *gmetric.Client)
 	register(r *Registry)
@@ -27,8 +28,8 @@ type metric interface {
 // to Ganglia.
 type Registry struct {
 	Prefix            string
-	NameSeparator     string // Default is a dot "."
-	Client            *gmetric.Client
+	NameSeparator     string          // Default is a dot "."
+	Client            *gmetric.Client `inject:""`
 	WriteTickDuration time.Duration
 	startOnce         sync.Once
 	metrics           []metric
@@ -84,6 +85,18 @@ func (r *Registry) Register(m interface{}) {
 	r.metrics = append(r.metrics, v)
 }
 
+// Get the metric with the given name.
+func (r *Registry) Get(name string) interface{} {
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+	for _, m := range r.metrics {
+		if m.name() == name {
+			return m
+		}
+	}
+	return nil
+}
+
 func (r *Registry) registered() []metric {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
@@ -110,4 +123,13 @@ func (r *Registry) nameSeparator() string {
 		return "."
 	}
 	return r.NameSeparator
+}
+
+// NewTestRegistry returns a Registry that does not automatically tick or write
+// metrics (and hence doesn't need a running client or server).
+func NewTestRegistry() *Registry {
+	r := &Registry{}
+	// consume the start once to disable the background goroutine
+	r.startOnce.Do(func() {})
+	return r
 }

@@ -1,8 +1,8 @@
 package gangliamr
 
 import (
-	"github.com/daaku/go.ganglia/gmetric"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmetric"
+	"github.com/facebookgo/metrics"
 )
 
 // Counters hold an int64 value that can be incremented and decremented.
@@ -14,6 +14,10 @@ type Counter struct {
 	Description string
 	Groups      []string
 	gmetric     gmetric.Metric
+}
+
+func (c *Counter) name() string {
+	return c.Name
 }
 
 func (c *Counter) writeMeta(client *gmetric.Client) {

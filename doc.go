@@ -1,12 +1,12 @@
 // Package gangliamr provides metrics backed by Ganglia.
 //
 // The underlying in-memory metrics are used from:
-// http://godoc.org/github.com/daaku/go.metrics. Application code should by
+// http://godoc.org/github.com/facebookgo/metrics. Application code should by
 // typed to the interfaces defined in that package in order to not be Ganglia
 // specific.
 //
 // The underlying Ganglia library is:
-// http://godoc.org/github.com/daaku/go.ganglia/gmetric.
+// http://godoc.org/github.com/facebookgo/ganglia/gmetric.
 //
 // A handful of metrics types are provided, and they all have a similar form.
 // The "Name" property is always required, all other properties are optional.

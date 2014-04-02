@@ -1,8 +1,8 @@
 package gangliamr
 
 import (
-	"github.com/daaku/go.ganglia/gmetric"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmetric"
+	"github.com/facebookgo/metrics"
 )
 
 // Meters count events to produce exponentially-weighted moving average rates
@@ -19,6 +19,10 @@ type Meter struct {
 	m5rate      gmetric.Metric
 	m15rate     gmetric.Metric
 	meanRate    gmetric.Metric
+}
+
+func (m *Meter) name() string {
+	return m.Name
 }
 
 func (m *Meter) writeMeta(c *gmetric.Client) {
@@ -38,13 +42,14 @@ func (m *Meter) writeValue(c *gmetric.Client) {
 }
 
 func (m *Meter) register(r *Registry) {
+	const units = "count/sec"
 	if m.Meter == nil {
 		m.Meter = metrics.NewMeter()
 	}
 	m.m1rate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "one-minute"),
 		Title:       makeOptional(m.Title, "one minute"),
-		Units:       nonEmpty(m.Units, "count/sec"),
+		Units:       nonEmpty(m.Units, units),
 		Description: makeOptional(m.Description, "one minute"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueFloat64,
@@ -53,7 +58,7 @@ func (m *Meter) register(r *Registry) {
 	m.m5rate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "five-minute"),
 		Title:       makeOptional(m.Title, "five minute"),
-		Units:       nonEmpty(m.Units, "count/sec"),
+		Units:       nonEmpty(m.Units, units),
 		Description: makeOptional(m.Description, "five minute"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueFloat64,
@@ -62,7 +67,7 @@ func (m *Meter) register(r *Registry) {
 	m.m15rate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "fifteen-minute"),
 		Title:       makeOptional(m.Title, "fifteen minute"),
-		Units:       nonEmpty(m.Units, "count/sec"),
+		Units:       nonEmpty(m.Units, units),
 		Description: makeOptional(m.Description, "fifteen minute"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueFloat64,
@@ -71,7 +76,7 @@ func (m *Meter) register(r *Registry) {
 	m.meanRate = gmetric.Metric{
 		Name:        r.makeName(m.Name, "mean"),
 		Title:       makeOptional(m.Title, "mean"),
-		Units:       nonEmpty(m.Units, "count/sec"),
+		Units:       nonEmpty(m.Units, units),
 		Description: makeOptional(m.Description, "mean"),
 		Groups:      m.Groups,
 		ValueType:   gmetric.ValueFloat64,

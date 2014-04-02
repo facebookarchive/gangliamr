@@ -3,9 +3,9 @@ package gangliamr
 import (
 	"testing"
 
-	"github.com/daaku/go.ganglia/gmon"
-	"github.com/daaku/go.ganglia/gmondtest"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmon"
+	"github.com/facebookgo/ganglia/gmondtest"
+	"github.com/facebookgo/metrics"
 )
 
 func TestMeterSimple(t *testing.T) {
@@ -22,6 +22,7 @@ func TestMeterSimple(t *testing.T) {
 	registry := testRegistry(h.Client)
 	registry.Register(meter)
 
+	const units = "count/sec"
 	const v1 = 43
 	meter.Mark(v1)
 	registry.tick()
@@ -29,7 +30,7 @@ func TestMeterSimple(t *testing.T) {
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".one-minute",
 		Value: "8.6",
-		Unit:  "count/sec",
+		Unit:  units,
 		Slope: "both",
 	})
 
@@ -40,7 +41,7 @@ func TestMeterSimple(t *testing.T) {
 	h.ContainsMetric(&gmon.Metric{
 		Name:  name + ".one-minute",
 		Value: "8.584008882925865",
-		Unit:  "count/sec",
+		Unit:  units,
 		Slope: "both",
 	})
 }

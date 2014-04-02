@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/4eek/gofaker/lorem"
-	"github.com/daaku/go.ganglia/gmetric"
-	"github.com/daaku/go.gangliamr"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmetric"
+	"github.com/facebookgo/gangliamr"
+	"github.com/facebookgo/metrics"
 )
 
 type Server struct {

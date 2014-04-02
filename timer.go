@@ -3,8 +3,8 @@ package gangliamr
 import (
 	"time"
 
-	"github.com/daaku/go.ganglia/gmetric"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmetric"
+	"github.com/facebookgo/metrics"
 )
 
 var timerTrackedPercentiles = []float64{0.5, 0.75, 0.95, 0.98, 0.99, 0.999}
@@ -15,10 +15,6 @@ type Timer struct {
 	// histogram and meter. The histogram will use an exponentially-decaying
 	// sample with the same reservoir size and alpha as UNIX load averages.
 	metrics.Timer
-
-	// Defaults to time.Nanosecond, supports time.Microsecond, time.Millisecond
-	// or time.Second. Other values will trigger falling back to time.Nanosecond.
-	Resolution time.Duration
 
 	Name        string // Required
 	Title       string
@@ -35,6 +31,10 @@ type Timer struct {
 	p98    gmetric.Metric
 	p99    gmetric.Metric
 	p999   gmetric.Metric
+}
+
+func (t *Timer) name() string {
+	return t.Name
 }
 
 func (t *Timer) writeValue(c *gmetric.Client) {
@@ -72,7 +72,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "max"),
 		Title:       makeOptional(t.Title, "maximum"),
 		Description: makeOptional(t.Description, "maximum"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueUint32,
 		Slope:       gmetric.SlopeBoth,
@@ -81,7 +81,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "mean"),
 		Title:       makeOptional(t.Title, "mean"),
 		Description: makeOptional(t.Description, "mean"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueUint32,
 		Slope:       gmetric.SlopeBoth,
@@ -90,7 +90,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "min"),
 		Title:       makeOptional(t.Title, "minimum"),
 		Description: makeOptional(t.Description, "minimum"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueUint32,
 		Slope:       gmetric.SlopeBoth,
@@ -99,7 +99,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "stddev"),
 		Title:       makeOptional(t.Title, "standard deviation"),
 		Description: makeOptional(t.Description, "standard deviation"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueUint32,
 		Slope:       gmetric.SlopeBoth,
@@ -108,7 +108,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "p50"),
 		Title:       makeOptional(t.Title, "50th percentile"),
 		Description: makeOptional(t.Description, "50th percentile"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueFloat64,
 		Slope:       gmetric.SlopeBoth,
@@ -117,7 +117,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "p75"),
 		Title:       makeOptional(t.Title, "75th percentile"),
 		Description: makeOptional(t.Description, "75th percentile"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueFloat64,
 		Slope:       gmetric.SlopeBoth,
@@ -126,7 +126,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "p95"),
 		Title:       makeOptional(t.Title, "95th percentile"),
 		Description: makeOptional(t.Description, "95th percentile"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueFloat64,
 		Slope:       gmetric.SlopeBoth,
@@ -135,7 +135,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "p98"),
 		Title:       makeOptional(t.Title, "98th percentile"),
 		Description: makeOptional(t.Description, "98th percentile"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueFloat64,
 		Slope:       gmetric.SlopeBoth,
@@ -144,7 +144,7 @@ func (t *Timer) register(r *Registry) {
 		Name:        r.makeName(t.Name, "p99"),
 		Title:       makeOptional(t.Title, "99th percentile"),
 		Description: makeOptional(t.Description, "99th percentile"),
-		Units:       t.units(),
+		Units:       "seconds",
 		Groups:      t.Groups,
 		ValueType:   gmetric.ValueFloat64,
 		Slope:       gmetric.SlopeBoth,
@@ -152,7 +152,7 @@ func (t *Timer) register(r *Registry) {
 	t.p999 = gmetric.Metric{
 		Name:      r.makeName(t.Name, "p999"),
 		Title:     makeOptional(t.Title, "99.9th percentile"),
-		Units:     t.units(),
+		Units:     "seconds",
 		Groups:    t.Groups,
 		ValueType: gmetric.ValueFloat64,
 		Slope:     gmetric.SlopeBoth,
@@ -160,40 +160,9 @@ func (t *Timer) register(r *Registry) {
 }
 
 func (t *Timer) normalizeInt64(v int64) int64 {
-	switch t.Resolution {
-	default:
-		return v
-	case time.Microsecond:
-		return v / int64(time.Microsecond)
-	case time.Millisecond:
-		return v / int64(time.Millisecond)
-	case time.Second:
-		return v / int64(time.Second)
-	}
+	return v / int64(time.Second)
 }
 
 func (t *Timer) normalizeFloat64(v float64) float64 {
-	switch t.Resolution {
-	default:
-		return v
-	case time.Microsecond:
-		return v / float64(time.Microsecond)
-	case time.Millisecond:
-		return v / float64(time.Millisecond)
-	case time.Second:
-		return v / float64(time.Second)
-	}
-}
-
-func (t *Timer) units() string {
-	switch t.Resolution {
-	default:
-		return "nanoseconds"
-	case time.Microsecond:
-		return "microseconds"
-	case time.Millisecond:
-		return "milliseconds"
-	case time.Second:
-		return "seconds"
-	}
+	return v / float64(time.Second)
 }

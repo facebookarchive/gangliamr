@@ -3,7 +3,7 @@ package gangliamr
 import (
 	"time"
 
-	"github.com/daaku/go.ganglia/gmetric"
+	"github.com/facebookgo/ganglia/gmetric"
 )
 
 func testRegistry(client *gmetric.Client) *Registry {

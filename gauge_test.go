@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/daaku/go.ganglia/gmon"
-	"github.com/daaku/go.ganglia/gmondtest"
-	"github.com/daaku/go.metrics"
+	"github.com/facebookgo/ganglia/gmon"
+	"github.com/facebookgo/ganglia/gmondtest"
+	"github.com/facebookgo/metrics"
 )
 
 func TestGaugeSimple(t *testing.T) {
