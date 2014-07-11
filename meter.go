@@ -5,7 +5,7 @@ import (
 	"github.com/facebookgo/metrics"
 )
 
-// Meters count events to produce exponentially-weighted moving average rates
+// Meter counts events to produce exponentially-weighted moving average rates
 // at one-, five-, and fifteen-minutes and a mean rate.
 type Meter struct {
 	metrics.Meter

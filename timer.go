@@ -9,7 +9,7 @@ import (
 
 var timerTrackedPercentiles = []float64{0.5, 0.75, 0.95, 0.98, 0.99, 0.999}
 
-// Timers capture the duration and rate of events.
+// Timer captures the duration and rate of events.
 type Timer struct {
 	// Unless explicitly specified, this will be a timer with a standard
 	// histogram and meter. The histogram will use an exponentially-decaying

@@ -16,6 +16,7 @@ import (
 	"github.com/facebookgo/metrics"
 )
 
+// Server defines a trivial server to demonstrate Ganglia metrics.
 type Server struct {
 	MaxSentences       int
 	MaxSleep           time.Duration

@@ -7,7 +7,7 @@ import (
 
 var histogramTrackedPercentiles = []float64{0.5, 0.75, 0.95, 0.98, 0.99, 0.999}
 
-// Histograms calculate distribution statistics from an int64 value.
+// Histogram calculates distribution statistics from an int64 value.
 type Histogram struct {
 	// Unless explicitly specified, this will be a histogram with an
 	// exponentially-decaying sample with the same reservoir size and alpha as

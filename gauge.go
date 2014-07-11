@@ -5,7 +5,7 @@ import (
 	"github.com/facebookgo/metrics"
 )
 
-// Gauges hold an int64 value that can be set arbitrarily.
+// Gauge holds an int64 value that can be set arbitrarily.
 type Gauge struct {
 	metrics.Gauge
 	Name        string // Required.
